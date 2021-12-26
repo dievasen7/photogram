@@ -34,9 +34,6 @@ class CommentController extends Controller
              
              return redirect()->route('post.show', ['post' => $post->id]);
         } catch (\Throwable $ex) {
-            if ($comment->id) {
-                $comment->delete();
-            }
             
             return redirect()->back()->withErrors([$ex->getMessage()]);
         }
@@ -56,9 +53,12 @@ class CommentController extends Controller
         }
         if ($comment->delete()) {
             $responseCode = 200;
-            $responseResult = "Deletion was sucessfull";
+            $responseResult = true;
+        } else {
+            $responseCode = 500;
+            $responseResult = false;
         }
         
-        return response(['result' => $responseResult], $responseCode);
+        return response(['result'=>$responseResult], $responseCode);
     }
 }
